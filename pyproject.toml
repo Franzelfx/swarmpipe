@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "swarmpipe"
+version = "0.0.0.dev0"
+description = "Split a model across machines, and move the tensors between them."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "NexPatch AI UG" }]
+keywords = ["pipeline-parallelism", "distributed-training", "llm", "torch", "zeromq"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# The base install is what a coordinator needs: the plan layer, the wire format
+# and the transport. No torch — that is the whole point of the layering.
+dependencies = [
+  "numpy>=1.24",
+  "pyzmq>=25",
+]
+
+[project.optional-dependencies]
+# Only L1's surgery needs a deep-learning framework.
+torch = [
+  "torch>=2.2",
+  "transformers>=4.40",
+  "accelerate>=0.30",
+]
+lora = ["peft>=0.11"]
+dev = [
+  "pytest>=8",
+  "ruff>=0.15",
+]
+docs = ["mkdocs-material>=9"]
+
+[project.urls]
+Homepage = "https://github.com/Franzelfx/swarmpipe"
+Source = "https://github.com/Franzelfx/swarmpipe"
+Issues = "https://github.com/Franzelfx/swarmpipe/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/swarmpipe"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+# `seed/` holds verbatim copies from the parent project, kept byte-identical for
+# provenance until T0 ports them. They are linted once they land in `src/`.
+extend-exclude = ["seed"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Marks the tests that need the [torch] extra, so the torch-free contract can be
+# verified by running: pytest -m "not torch"
+markers = [
+  "torch: requires the optional torch extra",
+]
