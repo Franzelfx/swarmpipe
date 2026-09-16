@@ -24,7 +24,6 @@ Nur die Modellchirurgie in L1 braucht ein Deep-Learning-Framework.
 | Accelerate | `[torch]` | Apache-2.0 | Geräteplatzierung |
 | PEFT | `[lora]` | Apache-2.0 | LoRA-Adapter |
 | pytest, ruff | `[dev]` | MIT | Tests und Linting |
-| MkDocs Material | `[docs]` | MIT | Dokumentationsseite |
 
 ## Herkunft des Codes
 
@@ -36,8 +35,7 @@ Lizenzkopfzeilen des Ursprungsprojekts.
 **SilentSwarm ist dual lizenziert** (PolyForm Noncommercial 1.0.0 sowie eine
 kommerzielle Lizenz) und fällt nicht unter Apache-2.0. Die Umlizenzierung des
 herausgelösten Teils ist möglich, weil die NexPatch AI UG das Urheberrecht an
-diesem Code hält und ihn unter abweichenden Bedingungen freigeben kann; siehe
-[D1](docs/decisions.md).
+diesem Code hält und ihn unter abweichenden Bedingungen freigeben kann.
 
 Praktisch heißt das:
 

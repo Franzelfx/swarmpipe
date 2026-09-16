@@ -12,8 +12,8 @@ Consumer-Internetanschluss und keine Cluster-Verwaltung.
 > [seed/](seed/README.md)); Layer 2 und 3 sind spezifiziert, aber noch nicht
 > geschrieben.
 
-[English version](README.md) · [Entwurf](docs/design.md) ·
-[Stand der Technik](docs/prior-art.md) · [Fahrplan](docs/roadmap.md)
+[English version](README.md) · [Mitwirken](CONTRIBUTING.md) ·
+[Dokumentationsregeln](doc/README.md)
 
 ## Das Problem
 
@@ -99,7 +99,7 @@ unabhängiger Nutzer der API als Nachweis, dass die Nahtstellen tragen.
 **Nicht enthalten:** Scheduler, Steuerungsebene, Oberfläche, Modell-Hosting.
 Keine Meinung zu Optimierern, Zeitplänen oder Checkpointing — das sind
 Anwendungen, und dies ist die Schicht darunter. Kein zweites
-Deep-Learning-Backend auf Vorrat (siehe [D4](docs/decisions.md)).
+Deep-Learning-Backend auf Vorrat.
 
 **Formulierungsdisziplin:** nicht „ein 70B-Modell auf zwei Spiele-PCs, so schnell
 wie in der Cloud". Pipeline-Parallelität über einen Consumer-Anschluss ist durch

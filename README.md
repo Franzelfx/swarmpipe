@@ -11,8 +11,8 @@ and no cluster manager.
 > and Layers 2 and 3 are specified but not written. Follow along or open an issue
 > if the problem is one you have.
 
-[Deutsche Fassung](README.de.md) · [Design](docs/design.md) ·
-[Prior art](docs/prior-art.md) · [Roadmap](docs/roadmap.md)
+[Deutsche Fassung](README.de.md) · [Contributing](CONTRIBUTING.md) ·
+[Documentation policy](doc/README.md)
 
 ---
 
@@ -80,8 +80,7 @@ scheduler.
 swarmpipe is that machinery on its own, extracted from a working system
 ([SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm)) rather than designed
 in the abstract, with the seams drawn where experience says they belong. The
-funded work is finishing the extraction properly — see
-[docs/roadmap.md](docs/roadmap.md).
+funded work is finishing the extraction properly.
 
 ## What L1 looks like today
 
@@ -136,8 +135,7 @@ second machine.
 - Any opinion about optimizers, schedules or checkpointing — those are
   applications, and this is the layer beneath them
 - A second deep-learning backend. The protocol seam stays (it is what forces
-  L2/L3 to be torch-free), but nothing is built speculatively — see
-  [D4](docs/decisions.md)
+  L2/L3 to be torch-free), but nothing is built speculatively
 
 **Claims we will not make.** Not "run a 70B model on two gaming PCs as fast as a
 cloud instance." Pipeline parallelism across a consumer link is bounded by that
@@ -158,31 +156,22 @@ This project builds on existing work rather than replacing it. Short version:
 | [exo](https://github.com/exo-explore/exo), [distributed-llama](https://github.com/b4rtaz/distributed-llama), llama.cpp RPC | Split **inference** across everyday devices | No gradients, no fine-tuning — the backward path is the hard half |
 | [SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm) | The parent project this was extracted from | A platform with a scheduler and a control plane; noncommercially licensed. This is its severable core |
 
-Full analysis with citations: [docs/prior-art.md](docs/prior-art.md).
-
 ## Repository layout
 
 | Path | What it holds |
 |---|---|
 | `src/swarmpipe/` | The library. Working today: `split/spec.py`, `split/api.py`, `split/plan.py`. |
 | `tests/unit/` | Mirrors `src/swarmpipe/`. Runs without a GPU; `pytest -m "not torch"` runs without torch installed at all. |
-| `seed/port/` | Code lifted from SilentSwarm, awaiting the T0 port. See [docs/porting-guide.md](docs/porting-guide.md). |
+| `seed/port/` | Code lifted from SilentSwarm, awaiting the T0 port. See [seed/](seed/README.md). |
 | `seed/origin/` | The extraction plan this repo came from, kept verbatim for provenance. |
-| `docs/` | Design, requirements, prior art, roadmap, decisions, funding narrative. |
+| `doc/` | The documentation policy — what gets written down at this stage and what does not. |
 
 ## Documentation
 
-Written in German, with the exception of this page and the code.
-
-* [Design](docs/design.md) — the three layers and their contracts.
-* [Requirements](docs/requirements.md) — what the library must do, including the
-  constraints that were learned the expensive way.
-* [Prior art](docs/prior-art.md) — the field, and where the gap actually is.
-* [Roadmap](docs/roadmap.md) — T0–T9, with what each one ships, and the criteria
-  for abandoning or redirecting the approach.
-* [Decisions](docs/decisions.md) — the open questions.
-* [Porting guide](docs/porting-guide.md) — file-by-file, what moves and how.
-* [Prototype Fund](docs/prototype-fund.md) — the funding narrative and milestones.
+Deliberately thin while the code is young: this page, [CONTRIBUTING.md](CONTRIBUTING.md),
+the docstrings and the tests. What goes where, and what is left out on purpose,
+is in [doc/README.md](doc/README.md) (German, like everything except this page
+and the code).
 
 ## Licence
 

@@ -12,7 +12,7 @@ lässt, dass die Portierung in T0 nichts außer Importpfaden geändert hat — d
 bleiben die Kopfzeilen bis dahin stehen.
 
 **Die Bibliothek selbst steht unter Apache-2.0**, siehe `../../LICENSE` und
-[D1](../../docs/decisions.md). Die NexPatch AI UG hält das Urheberrecht an diesem
+[../../THIRD-PARTY.md](../../THIRD-PARTY.md). Die NexPatch AI UG hält das Urheberrecht an diesem
 Code und gibt ihn für die herausgelöste Bibliothek unter Apache-2.0 frei; beim
 Verschieben nach `src/swarmpipe/` in T0 wird die Kopfzeile entsprechend ersetzt.
 

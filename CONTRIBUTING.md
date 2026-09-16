@@ -6,8 +6,8 @@ spezifiziert, aber nicht geschrieben. Am hilfreichsten sind derzeit:
 - **Gegenargumente zum Zuschnitt.** Wenn Sie ein Modell schon einmal über
   gewöhnliche Rechner verteilt haben und wissen, woran es scheitert, ist das
   wertvoller als Code.
-- **Hinweise auf übersehene Vorarbeiten.** Siehe `docs/prior-art.md`. Wenn dort
-  etwas fehlt, bitte ein Issue.
+- **Hinweise auf übersehene Vorarbeiten.** Siehe die Tabelle zum Stand der
+  Technik im `README.md`. Wenn dort etwas fehlt, bitte ein Issue.
 - **Berichte von echter Hardware.** Gemischte GPUs, Consumer-Anschlüsse, NAT auf
   beiden Seiten. Genau dieser Fall lässt sich bei uns nicht vollständig
   nachstellen.
@@ -19,9 +19,9 @@ und die Tensoren dazwischen zu bewegen, herausgelöst aus dem Projekt
 SilentSwarm. Eine Bibliothek, keine Plattform: kein Scheduler, keine
 Steuerungsebene, keine Oberfläche.
 
-Vor der ersten Änderung [docs/design.md](docs/design.md) lesen, dann
-[docs/requirements.md](docs/requirements.md) — die zweite Hälfte dieser Seite ist
-eine Liste von Dingen, die bereits einmal schiefgegangen sind.
+Vor der ersten Änderung das `README.md` lesen, dann diese Seite bis zum Ende —
+die Regeln und Fallstricke unten sind eine Liste von Dingen, die bereits einmal
+schiefgegangen sind.
 
 ## Einrichtung
 
@@ -50,8 +50,9 @@ pytest -m "not torch" -q
 | `src/swarmpipe/wire/` | L2. Sieht Tensor-Frames. **Torch-frei per Regel.** Noch nicht implementiert (T2). |
 | `src/swarmpipe/link/` | L3. Sieht `list[bytes]`. **Torch-frei per Regel.** Noch nicht implementiert (T1). |
 | `tests/unit/` | Spiegelt `src/swarmpipe/`. |
-| `seed/port/` | Code aus dem Ursprungsprojekt, wartet auf die Portierung in T0. Noch nicht importierbar — siehe [docs/porting-guide.md](docs/porting-guide.md). |
-| `seed/origin/` | Der ursprüngliche Extraktionsplan, wörtlich. Nur zur Herkunft; der gültige Plan ist `docs/roadmap.md`. |
+| `seed/port/` | Code aus dem Ursprungsprojekt, wartet auf die Portierung in T0. Noch nicht importierbar — siehe [seed/README.md](seed/README.md). |
+| `seed/origin/` | Der ursprüngliche Extraktionsplan, wörtlich. Nur zur Herkunft; der gültige Plan sind die Meilensteine der Projektskizze. |
+| `doc/` | Dokumentationsregeln: was in dieser Phase aufgeschrieben wird und was nicht. |
 
 ## Die Regeln, die kein Stil sind
 
@@ -91,8 +92,9 @@ gibt, und die Splitting-Logik braucht überhaupt keinen Cluster.
 
 Zeilenlänge 100. `ruff` für Linting und Importreihenfolge. NumPy-Docstrings auf
 jedem öffentlichen Symbol, beginnend mit einer Zeile Zweck. Code, Docstrings und
-Kommentare auf Englisch; Dokumentation in `docs/` und `seed/` auf Deutsch,
-`README.md` auf Englisch.
+Kommentare auf Englisch; Dokumentation in `doc/` und `seed/` auf Deutsch,
+`README.md` auf Englisch. Was dokumentiert wird und was nicht:
+[doc/README.md](doc/README.md).
 
 Neue Abhängigkeiten nur mit Begründung — die Basisinstallation bleibt leicht,
 siehe `THIRD-PARTY.md`. Lieber ein Modul erweitern als eine Abstraktion

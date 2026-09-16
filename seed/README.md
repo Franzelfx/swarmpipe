@@ -9,17 +9,17 @@ Funktionierender, getesteter Code aus
 [SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm) (Branch
 `feat/quantized-lora`, Commit `1dec850`), **wörtlich kopiert, mit unveränderten
 Original-Kopfzeilen und Lizenzzeilen**. T0 verschiebt ihn nach `src/swarmpipe/`
-und schreibt seine Importe um; das Dateimanifest steht in
-[../docs/porting-guide.md](../docs/porting-guide.md).
+und schreibt seine Importe um; das Dateimanifest ist der Baum unter `port/`
+selbst.
 
 Er wird absichtlich bytegleich gehalten: Er ist die Referenz für die Prüfung, dass
 die Portierung nichts außer Importpfaden geändert hat. Aus demselben Grund ist er
 vom Linting ausgenommen.
 
 Die Lizenzkopfzeilen nennen PolyForm Noncommercial — das ist die Lizenz des
-Ursprungsprojekts. Die herausgelöste Bibliothek steht unter Apache-2.0
-([D1](../docs/decisions.md)); die Kopfzeilen werden beim Verschieben ersetzt, nicht
-vorher. Hintergrund: [../THIRD-PARTY.md](../THIRD-PARTY.md).
+Ursprungsprojekts. Die herausgelöste Bibliothek steht unter Apache-2.0; die
+Kopfzeilen werden beim Verschieben ersetzt, nicht vorher. Hintergrund:
+[../THIRD-PARTY.md](../THIRD-PARTY.md).
 
 Das Kernstück ist `port/split_torch/stage_builder.py`: die Modellchirurgie,
 bereits in einen einzelnen Bibliotheksaufruf mit reinem Datenargument
@@ -32,7 +32,6 @@ umfassenden, reinen CPU-Suite.
 Ursprungsprojekts geschrieben wurde, wörtlich zur Herkunftsdokumentation. Seine
 internen Links zeigen auf das Ursprungs-Repository und lösen hier nicht auf.
 
-**Er ist nicht der gültige Plan.** Das ist
-[../docs/roadmap.md](../docs/roadmap.md), und dort ist die Arbeit für ein
-eigenständiges Repository neu geordnet. `origin/` für die Begründung lesen,
-`docs/` für die Arbeit folgen.
+**Er ist nicht der gültige Plan.** Der gültige Plan sind die Meilensteine der
+Projektskizze und die Issues dieses Repositories; dort ist die Arbeit für ein
+eigenständiges Repository neu geordnet. `origin/` nur für die Begründung lesen.

@@ -8,8 +8,8 @@ feed a caller's telemetry — with two implementations:
 * ``relay_link.py`` — through an HTTP coordinator, for peers behind NAT;
 * ``resolve.py`` — endpoint resolution and failover between the two.
 
-Both must pass the *same* contract test. See ``docs/design.md`` and
-``docs/roadmap.md``.
+Both must pass the *same* contract test. See the README for the layer
+contracts.
 
 swarmpipe — Copyright 2026 NexPatch AI UG.
 Licensed under the Apache License 2.0. See LICENSE.

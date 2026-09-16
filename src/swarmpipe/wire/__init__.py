@@ -14,7 +14,7 @@ What lands here, in order:
 * ``session.py`` — the role object (upstream / downstream) that owns the
   exchange, including the **step id** that pairs an activation with its gradient.
 
-See ``docs/design.md`` and ``docs/roadmap.md``.
+See the README for the layer contracts.
 
 swarmpipe — Copyright 2026 NexPatch AI UG.
 Licensed under the Apache License 2.0. See LICENSE.
