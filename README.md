@@ -170,8 +170,7 @@ This project builds on existing work rather than replacing it. Short version:
 
 Deliberately thin while the code is young: this page, [CONTRIBUTING.md](CONTRIBUTING.md),
 the docstrings and the tests. What goes where, and what is left out on purpose,
-is in [doc/README.md](doc/README.md) (German, like everything except this page
-and the code).
+is in [doc/README.md](doc/README.md).
 
 ## Licence
 

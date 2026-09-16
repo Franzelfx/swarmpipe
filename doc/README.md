@@ -1,58 +1,58 @@
-# Dokumentation
+# Documentation
 
-Grundsatz für diese Phase: **weniger ist mehr.** Dokumentation, die dem Code
-vorausläuft, ist veraltet, bevor sie gelesen wird. Was hier steht, muss stimmen;
-was nicht mehr stimmt, wird gelöscht, nicht „später aktualisiert".
+Principle for this stage: **less is more.** Documentation that runs ahead of
+the code is stale before it is read. What is written here must be true; what is
+no longer true gets deleted, not "updated later".
 
-## Wo was steht
+## Where things live
 
-| Ort | Inhalt |
+| Place | Content |
 |---|---|
-| `README.md`, `README.de.md` | Problem, Ansatz, Status, Abgrenzung zu bestehenden Projekten, Installation und Nutzung sobald es etwas zu nutzen gibt, Lizenz. Die einzige Stelle für Prosa über das Projekt. |
-| `CONTRIBUTING.md` | Konventionen, Regeln, Fallstricke — alles, was jemand vor der ersten Änderung wissen muss. |
-| Docstrings | Zweck und *Warum* jedes öffentlichen Symbols. Die API-Referenz ist der Code. |
-| Tests | Das Verhalten. Ein Test ist die verbindliche Spezifikation, nicht ein Dokument. |
-| Issues | Offene Fragen, Ideen, alles jenseits des aktuellen Meilensteins. |
-| `doc/` | Diese Datei. Später höchstens `entscheidungen.md`, siehe unten. |
+| `README.md` | Problem, approach, status, how this differs from existing projects, installation and usage as soon as there is something to use, licence. The only place for prose about the project. |
+| `README.de.md` | German translation of the README, kept in sync. |
+| `CONTRIBUTING.md` | Conventions, rules, pitfalls — everything someone must know before their first change. |
+| Docstrings | Purpose and *why* of every public symbol. The API reference is the code. |
+| Tests | The behaviour. A test is the binding specification, not a document. |
+| Issues | Open questions, ideas, anything beyond the current milestone. |
+| `doc/` | This file. Later at most `decisions.md`, see below. |
 
-Meilensteine, Zeitplan und Förderlogik stehen in der Projektskizze, nicht im
-Repository.
+Milestones, schedule and funding rationale live in the project sketch, not in
+the repository.
 
-## Was in `doc/` gehört
+## What belongs in `doc/`
 
-Nur, was sich dem Code nicht ansehen lässt und trotzdem für alle verbindlich ist:
+Only what cannot be read off the code and is still binding for everyone:
 
-- **`entscheidungen.md`** — getroffene Entscheidungen mit Folgen über eine Datei
-  hinaus (Lizenz, Abhängigkeit, Schnittstelle, die nicht mehr geändert werden
-  darf). Pro Eintrag drei Sätze: Was wurde entschieden, warum, was wurde
-  verworfen. Nur getroffene Entscheidungen; offene Fragen sind Issues.
+- **`decisions.md`** — decisions already made whose consequences reach beyond a
+  single file (licence, dependency, an interface that may no longer change).
+  Three sentences per entry: what was decided, why, what was rejected. Decided
+  decisions only; open questions are issues.
 
-Ein Dokument pro Thema, höchstens eine Seite, mit Datum der letzten Prüfung in
-der ersten Zeile.
+One document per topic, at most one page, with the date of the last review in
+the first line.
 
-## Was nicht in `doc/` gehört
+## What does not belong in `doc/`
 
-- Entwürfe für Code, den es noch nicht gibt: Design-Dokumente, Anforderungslisten,
-  Portierungsanleitungen. Der Entwurf wird zu Docstrings und Tests, wenn der Code
-  entsteht.
-- Roadmaps über den aktuellen Meilenstein hinaus. Das sind Issues und Milestones
-  beim Repository-Hoster.
-- Literaturlisten. Ein Zitat gehört dorthin, wo es gebraucht wird: Docstring oder
-  README-Tabelle.
-- Zweitfassungen von README-Inhalten.
-- Anleitungen und Tutorials vor einer stabilen API.
-- Antragstexte und Fördernarrative.
-- Generierte Inhalte: API-Referenz, Changelog vor dem ersten Release.
+- Designs for code that does not exist yet: design documents, requirements
+  lists, porting guides. The design becomes docstrings and tests when the code
+  is written.
+- Roadmaps beyond the current milestone. Those are issues and milestones on the
+  repository host.
+- Reading lists. A citation belongs where it is used: a docstring or a README
+  table.
+- Second copies of README content.
+- Guides and tutorials before the API is stable.
+- Application texts and funding narratives.
+- Generated content: API reference, changelog before the first release.
 
-## Regeln
+## Rules
 
-1. Widerspricht ein Dokument dem Code, gilt der Code. Das Dokument wird in
-   derselben Änderung korrigiert oder gelöscht.
-2. Dokumentation entsteht in derselben Änderung wie das, was sie beschreibt —
-   nie davor, nie „nachgereicht".
-3. Sprache: Deutsch in `doc/` und `README.de.md`; Englisch in `README.md`, Code,
-   Docstrings und Commit-Nachrichten.
-4. Im Zweifel nicht dokumentieren. Ein Issue kostet weniger als ein veraltetes
-   Dokument.
-5. Vor jedem Release und jeder Bewerbungsrunde `doc/` durchgehen: Was nicht mehr
-   stimmt, fliegt.
+1. If a document contradicts the code, the code wins. The document is corrected
+   or deleted in the same change.
+2. Documentation is written in the same change as the thing it describes —
+   never before, never "added later".
+3. Language: English everywhere — documents, code, docstrings, commit messages.
+   `README.de.md` is the one deliberate translation.
+4. When in doubt, do not document. An issue costs less than a stale document.
+5. Before every release and every funding round, walk through `doc/`: whatever
+   is no longer true goes.

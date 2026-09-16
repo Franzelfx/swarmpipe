@@ -1,21 +1,21 @@
-# Zur Lizenzkopfzeile in diesen Dateien
+# On the licence header in these files
 
-Die `.py`-Dateien in diesem Verzeichnis tragen die Kopfzeile
+The `.py` files in this directory carry the header
 
 > SilentSwarm — Copyright 2026 NexPatch AI UG.
 > Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
 
-Das „LICENSE" darin meint die `LICENSE` des **Ursprungs-Repositories**
-[SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm), nicht die dieses
-Repositories. Die Kopien hier werden bytegleich gehalten, damit sich nachweisen
-lässt, dass die Portierung in T0 nichts außer Importpfaden geändert hat — deshalb
-bleiben die Kopfzeilen bis dahin stehen.
+The "LICENSE" in it means the `LICENSE` of the **parent repository**
+[SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm), not this
+repository's. The copies here are kept byte-identical so that it can be shown
+the T0 port changed nothing but import paths — which is why the headers stay
+until then.
 
-**Die Bibliothek selbst steht unter Apache-2.0**, siehe `../../LICENSE` und
-[../../THIRD-PARTY.md](../../THIRD-PARTY.md). Die NexPatch AI UG hält das Urheberrecht an diesem
-Code und gibt ihn für die herausgelöste Bibliothek unter Apache-2.0 frei; beim
-Verschieben nach `src/swarmpipe/` in T0 wird die Kopfzeile entsprechend ersetzt.
+**The library itself is licensed Apache-2.0**, see `../../LICENSE` and
+[../../THIRD-PARTY.md](../../THIRD-PARTY.md). NexPatch AI UG holds the copyright
+on this code and releases it under Apache-2.0 for the extracted library; on
+moving to `src/swarmpipe/` in T0 the header is replaced accordingly.
 
-Nichts in diesem Verzeichnis liegt auf dem Importpfad, und nichts davon wird in
-ein gebautes Paket aufgenommen. Wer den Code jetzt schon verwenden will, nimmt
-ihn aus `src/` — oder wartet auf T0.
+Nothing in this directory is on the import path, and none of it is included in
+a built package. Anyone who wants to use the code now takes it from `src/` — or
+waits for T0.

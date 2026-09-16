@@ -1,37 +1,34 @@
-# `seed/` — Material aus dem Ursprungsprojekt
+# `seed/` — material from the parent project
 
-Nichts hiervon liegt auf dem Importpfad. Es ist bereitgestellt, nicht
-ausgeliefert.
+Nothing here is on the import path. It is provided, not shipped.
 
 ## `port/`
 
-Funktionierender, getesteter Code aus
-[SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm) (Branch
-`feat/quantized-lora`, Commit `1dec850`), **wörtlich kopiert, mit unveränderten
-Original-Kopfzeilen und Lizenzzeilen**. T0 verschiebt ihn nach `src/swarmpipe/`
-und schreibt seine Importe um; das Dateimanifest ist der Baum unter `port/`
-selbst.
+Working, tested code from
+[SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm) (branch
+`feat/quantized-lora`, commit `1dec850`), **copied verbatim, with the original
+headers and licence lines unchanged**. T0 moves it to `src/swarmpipe/` and
+rewrites its imports; the file manifest is the tree under `port/` itself.
 
-Er wird absichtlich bytegleich gehalten: Er ist die Referenz für die Prüfung, dass
-die Portierung nichts außer Importpfaden geändert hat. Aus demselben Grund ist er
-vom Linting ausgenommen.
+It is deliberately kept byte-identical: it is the reference for checking that
+the port changed nothing but import paths. For the same reason it is excluded
+from linting.
 
-Die Lizenzkopfzeilen nennen PolyForm Noncommercial — das ist die Lizenz des
-Ursprungsprojekts. Die herausgelöste Bibliothek steht unter Apache-2.0; die
-Kopfzeilen werden beim Verschieben ersetzt, nicht vorher. Hintergrund:
-[../THIRD-PARTY.md](../THIRD-PARTY.md).
+The licence headers name PolyForm Noncommercial — that is the parent project's
+licence. The extracted library is licensed Apache-2.0; the headers are replaced
+on moving, not before. Background: [../THIRD-PARTY.md](../THIRD-PARTY.md).
 
-Das Kernstück ist `port/split_torch/stage_builder.py`: die Modellchirurgie,
-bereits in einen einzelnen Bibliotheksaufruf mit reinem Datenargument
-herausgezogen, samt `port/split_torch/test_stage_builder.py`, ihrer 19 Tests
-umfassenden, reinen CPU-Suite.
+The centrepiece is `port/split_torch/stage_builder.py`: the model surgery,
+already pulled out into a single library call with a plain data argument,
+together with `port/split_torch/test_stage_builder.py`, its 19-test, CPU-only
+suite.
 
 ## `origin/`
 
-`pipeline-library-extraction-epics.md` — der Extraktionsplan, der innerhalb des
-Ursprungsprojekts geschrieben wurde, wörtlich zur Herkunftsdokumentation. Seine
-internen Links zeigen auf das Ursprungs-Repository und lösen hier nicht auf.
+`pipeline-library-extraction-epics.md` — the extraction plan written inside the
+parent project, verbatim, for provenance. Its internal links point at the
+parent repository and do not resolve here.
 
-**Er ist nicht der gültige Plan.** Der gültige Plan sind die Meilensteine der
-Projektskizze und die Issues dieses Repositories; dort ist die Arbeit für ein
-eigenständiges Repository neu geordnet. `origin/` nur für die Begründung lesen.
+**It is not the valid plan.** The valid plan is the milestones of the project
+sketch and this repository's issues; there the work is reorganised for a
+standalone repository. Read `origin/` for the rationale only.

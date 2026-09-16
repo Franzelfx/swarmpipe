@@ -1,133 +1,128 @@
-# Mitwirken
+# Contributing
 
-Das Projekt ist in der Pre-Alpha-Phase: Layer 1 steht, Layer 2 und 3 sind
-spezifiziert, aber nicht geschrieben. Am hilfreichsten sind derzeit:
+The project is pre-alpha: Layer 1 stands, Layers 2 and 3 are specified but not
+written. The most useful contributions right now:
 
-- **Gegenargumente zum Zuschnitt.** Wenn Sie ein Modell schon einmal über
-  gewöhnliche Rechner verteilt haben und wissen, woran es scheitert, ist das
-  wertvoller als Code.
-- **Hinweise auf übersehene Vorarbeiten.** Siehe die Tabelle zum Stand der
-  Technik im `README.md`. Wenn dort etwas fehlt, bitte ein Issue.
-- **Berichte von echter Hardware.** Gemischte GPUs, Consumer-Anschlüsse, NAT auf
-  beiden Seiten. Genau dieser Fall lässt sich bei uns nicht vollständig
-  nachstellen.
+- **Counter-arguments to the cut.** If you have split a model across ordinary
+  machines before and know where it fails, that is worth more than code.
+- **Pointers to prior work we missed.** See the prior-art table in
+  `README.md`. If something is missing there, please open an issue.
+- **Reports from real hardware.** Mixed GPUs, consumer connections, NAT on both
+  ends. That exact case is the one we cannot fully reproduce ourselves.
 
-## Worum es geht
+## What this is about
 
-`swarmpipe` — die Maschinerie, um ein Modell über mehrere Rechner zu verteilen
-und die Tensoren dazwischen zu bewegen, herausgelöst aus dem Projekt
-SilentSwarm. Eine Bibliothek, keine Plattform: kein Scheduler, keine
-Steuerungsebene, keine Oberfläche.
+`swarmpipe` — the machinery for splitting a model across several machines and
+moving the tensors between them, extracted from the SilentSwarm project. A
+library, not a platform: no scheduler, no control plane, no user interface.
 
-Vor der ersten Änderung das `README.md` lesen, dann diese Seite bis zum Ende —
-die Regeln und Fallstricke unten sind eine Liste von Dingen, die bereits einmal
-schiefgegangen sind.
+Before your first change, read `README.md`, then this page to the end — the
+rules and pitfalls below are a list of things that have already gone wrong
+once.
 
-## Einrichtung
+## Setup
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
-pip install -e ".[dev,torch,lora]"     # GPU-Maschine, oder CPU-torch für Tests
-pytest -q                              # alles
-pytest -m "not torch" -q               # nur das, was ohne DL-Framework laufen muss
+pip install -e ".[dev,torch,lora]"     # GPU machine, or CPU torch for tests
+pytest -q                              # everything
+pytest -m "not torch" -q               # only what must run without a DL framework
 ruff check .
 ```
 
-Für Arbeiten an der Wire- oder Transportschicht bitte eine **zweite Umgebung ohne
-installiertes torch** verwenden — nur so fällt auf, wenn der torch-freie Vertrag
-gebrochen wurde:
+For work on the wire or transport layer, please use a **second environment
+without torch installed** — that is the only way to notice when the torch-free
+contract has been broken:
 
 ```bash
 pip install -e ".[dev]"
 pytest -m "not torch" -q
 ```
 
-## Aufbau
+## Layout
 
-| Pfad | Was dort liegt |
+| Path | What lives there |
 |---|---|
-| `src/swarmpipe/split/` | L1. Sieht Modelle. `spec.py`/`api.py`/`plan.py` sind torch-frei; `torch/` ist das Backend. |
-| `src/swarmpipe/wire/` | L2. Sieht Tensor-Frames. **Torch-frei per Regel.** Noch nicht implementiert (T2). |
-| `src/swarmpipe/link/` | L3. Sieht `list[bytes]`. **Torch-frei per Regel.** Noch nicht implementiert (T1). |
-| `tests/unit/` | Spiegelt `src/swarmpipe/`. |
-| `seed/port/` | Code aus dem Ursprungsprojekt, wartet auf die Portierung in T0. Noch nicht importierbar — siehe [seed/README.md](seed/README.md). |
-| `seed/origin/` | Der ursprüngliche Extraktionsplan, wörtlich. Nur zur Herkunft; der gültige Plan sind die Meilensteine der Projektskizze. |
-| `doc/` | Dokumentationsregeln: was in dieser Phase aufgeschrieben wird und was nicht. |
+| `src/swarmpipe/split/` | L1. Sees models. `spec.py`/`api.py`/`plan.py` are torch-free; `torch/` is the backend. |
+| `src/swarmpipe/wire/` | L2. Sees tensor frames. **Torch-free by rule.** Not yet implemented (T2). |
+| `src/swarmpipe/link/` | L3. Sees `list[bytes]`. **Torch-free by rule.** Not yet implemented (T1). |
+| `tests/unit/` | Mirrors `src/swarmpipe/`. |
+| `seed/port/` | Code from the parent project, awaiting the T0 port. Not importable yet — see [seed/README.md](seed/README.md). |
+| `seed/origin/` | The original extraction plan, verbatim. Provenance only; the valid plan is the milestones of the project sketch. |
+| `doc/` | Documentation policy: what gets written down at this stage and what does not. |
 
-## Die Regeln, die kein Stil sind
+## The rules that are not style
 
-1. **Nichts unterhalb von `wire/` oder `link/` darf torch importieren**, weder
-   direkt noch über ein anderes Modul. Dafür existiert die ganze Schichtung: Ein
-   Koordinator soll Datenverkehr weiterreichen können, ohne GPU-Stack. In der CI
-   erzwungen; wer es bricht, repariert es mit einem Adapter in L1, nicht mit
-   einer Ausnahme. Geprüft wird über einen Subprozess mit Import-Blocker, nicht
-   in-process — die Testsuite importiert torch an anderer Stelle, und eine
-   In-Process-Prüfung liefe gegen ein bereits geladenes Modul und ginge durch.
-2. **L1 fasst niemals einen Socket an.** Wenn eine Splitting-Funktion einen Kanal
-   braucht, ist der Entwurf falsch.
-3. **Abhängigkeiten zeigen in eine Richtung**: `split` → `wire` → `link`. Die
-   obere Schicht darf die untere importieren, niemals umgekehrt.
-4. **Nichts hier importiert das Ursprungsprojekt.** `grep -rn "silent_swarm" src/
-   tests/` muss leer bleiben.
-5. **Wire-Formate sind Kompatibilitätsflächen.** Framing und
-   Kompressions-Spec-Strings stehen in fremden Job-Records. Ihre *Bedeutung* zu
-   ändern ist ein Breaking Change, auch wenn lokal nichts fehlschlägt.
-6. **Eine leere Liste trainierbarer Parameter ist ein harter Fehler**, keine
-   Warnung. Ein Optimierer über nichts läuft in jedem Schritt, meldet einen Loss
-   und ändert nichts.
-7. **Jedes Feature kommt mit Tests und Dokumentation in derselben Änderung.**
-   Vom Ursprungsprojekt geerbt, und der Grund, warum dessen Refactorings
-   überlebbar sind.
+1. **Nothing below `wire/` or `link/` may import torch**, neither directly nor
+   through another module. That is what the whole layering exists for: a
+   coordinator must be able to relay traffic without a GPU stack. Enforced in
+   CI; whoever breaks it fixes it with an adapter in L1, not with an exception.
+   Checked through a subprocess with an import blocker, not in-process — the
+   test suite imports torch elsewhere, and an in-process check would run
+   against an already loaded module and pass.
+2. **L1 never touches a socket.** If a splitting function needs a channel, the
+   design is wrong.
+3. **Dependencies point in one direction**: `split` → `wire` → `link`. The
+   upper layer may import the lower one, never the reverse.
+4. **Nothing here imports the parent project.** `grep -rn "silent_swarm" src/
+   tests/` must stay empty.
+5. **Wire formats are compatibility surfaces.** Framing and compression spec
+   strings sit in other people's job records. Changing their *meaning* is a
+   breaking change even when nothing fails locally.
+6. **An empty list of trainable parameters is a hard error**, not a warning.
+   An optimiser over nothing runs every step, reports a loss and changes
+   nothing.
+7. **Every feature ships with tests and documentation in the same change.**
+   Inherited from the parent project, and the reason its refactorings are
+   survivable.
 
 ## Tests
 
-Den Quellbaum spiegeln: `tests/unit/<paket>/` für `src/swarmpipe/<paket>/`. Alles,
-was das torch-Extra braucht, mit `@pytest.mark.torch` markieren.
+Mirror the source tree: `tests/unit/<package>/` for `src/swarmpipe/<package>/`.
+Mark everything that needs the torch extra with `@pytest.mark.torch`.
 
-Tests bevorzugen, die keine GPU brauchen. Das geht weiter, als es aussieht:
-Geräteplatzierung ist gegen das `meta`-Device prüfbar, das es auf jeder Maschine
-gibt, und die Splitting-Logik braucht überhaupt keinen Cluster.
+Prefer tests that need no GPU. That goes further than it looks: device
+placement can be checked against the `meta` device, which exists on every
+machine, and the splitting logic needs no cluster at all.
 
-## Stil
+## Style
 
-Zeilenlänge 100. `ruff` für Linting und Importreihenfolge. NumPy-Docstrings auf
-jedem öffentlichen Symbol, beginnend mit einer Zeile Zweck. Code, Docstrings und
-Kommentare auf Englisch; Dokumentation in `doc/` und `seed/` auf Deutsch,
-`README.md` auf Englisch. Was dokumentiert wird und was nicht:
+Line length 100. `ruff` for linting and import order. NumPy docstrings on every
+public symbol, starting with one line of purpose. Everything in English —
+documents, code, docstrings, commit messages. `README.de.md` is the one
+deliberate translation. What gets documented and what does not:
 [doc/README.md](doc/README.md).
 
-Neue Abhängigkeiten nur mit Begründung — die Basisinstallation bleibt leicht,
-siehe `THIRD-PARTY.md`. Lieber ein Modul erweitern als eine Abstraktion
-hinzufügen: Die Transportschicht des Ursprungsprojekts hat auf genau diesem Weg
-zwei konkurrierende Implementierungen bekommen.
+New dependencies only with a justification — the base install stays light, see
+`THIRD-PARTY.md`. Extend a module rather than add an abstraction: the parent
+project's transport layer acquired two competing implementations exactly that
+way.
 
-Kommentare erklären das *Warum*, besonders dort, wo der Code defensiv ist: Die
-meisten Wächter in dieser Bibliothek existieren, weil im Betrieb etwas
-fehlgeschlagen ist, und ein Kommentar, der den Fehlschlag benennt, verhindert,
-dass der Wächter später „vereinfacht" wird.
+Comments explain the *why*, especially where the code is defensive: most guards
+in this library exist because something failed in production, and a comment
+naming the failure keeps the guard from being "simplified" away later.
 
-## Sprachregelung
+## Wording
 
-Nicht „so schnell wie ein Cluster" und nicht „unbegrenzt skalierbar". Korrekt
-ist: Arbeit, die auf einem einzelnen Rechner nicht möglich war, wird auf mehreren
-möglich, bei einem Durchsatz, den die Netzverbindung begrenzt und den wir messen.
-Kompression an der Stage-Grenze ist verlustbehaftet. Das gilt für
-Code-Kommentare, Docstrings und Fehlermeldungen genauso wie für die
-Dokumentation.
+Not "as fast as a cluster" and not "unlimited scaling". Correct is: work that
+was impossible on a single machine becomes possible on several, at a throughput
+the network connection bounds and we measure. Compression at the stage boundary
+is lossy. This applies to code comments, docstrings and error messages as much
+as to the documentation.
 
-## Fallstricke
+## Pitfalls
 
-- Module immer bedingungslos auf ihr Zielgerät verschieben, nicht nur bei
-  mehreren GPUs — sonst bleiben die Embeddings auf der CPU, während die Eingaben
-  schon auf `cuda:0` liegen.
-- bfloat16 hat keinen numpy-dtype. Ein torch-freies L2 braucht dafür eine
-  ausdrückliche Darstellung; Tests nur auf fp32 finden das nicht.
-- Den dtype nie hart kodieren — er ist Eigenschaft des Plans, nicht des Codes.
-- Das Relay-Framing und die Kompressions-Spec-Strings nicht ändern: Sie stehen in
-  Job-Records laufender Systeme.
+- Always move modules to their target device unconditionally, not only with
+  several GPUs — otherwise the embeddings stay on the CPU while the inputs are
+  already on `cuda:0`.
+- bfloat16 has no numpy dtype. A torch-free L2 needs an explicit
+  representation for it; tests on fp32 only will not find this.
+- Never hard-code the dtype — it is a property of the plan, not of the code.
+- Do not change the relay framing or the compression spec strings: they sit in
+  job records of running systems.
 
-## Was nicht hineingehört
+## What does not belong here
 
-Keine Modellgewichte, keine Checkpoints, keine personenbezogenen Daten. Nichts
-aus dem Ursprungsprojekt außer dem, was in `seed/` bereits steht — und dieses
-bleibt bis zur Portierung unverändert.
+No model weights, no checkpoints, no personal data. Nothing from the parent
+project beyond what already sits in `seed/` — and that stays unchanged until
+the port.
