@@ -27,7 +27,7 @@ jobs:
           title = os.environ["PR_TITLE"]
 
           type_re = r"(feat|fix|docs|chore|spike)"
-          domain_re = r"(split|wire|link|seed|readme|ci|release)"
+          domain_re = r"(split|wire|link|seed|readme|repo|ci|release)"
           branch_re = re.compile(rf"^{type_re}\({domain_re}\)/[0-9]+-[a-z0-9]+(?:-[a-z0-9]+)*$")
           title_re = re.compile(rf"^{type_re}\({domain_re}\): #[0-9]+: .+$")
           allowed_branch_names = {"main", "develop"}

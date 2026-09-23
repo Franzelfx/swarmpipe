@@ -59,8 +59,10 @@ Branch names are:
 
 `<type>` is one of `feat`, `fix`, `docs`, `chore`, `spike`. `<domain>` names
 the layer or repository surface: `split`, `wire`, `link`, `seed`, `readme`,
-`ci`, `release`. The only exceptions are the long-lived branches `main` and
-`develop`.
+`repo`, `ci`, `release`. `repo` is for the rules themselves — this file, the
+issue and pull request templates, the licence — as opposed to `ci`, which is
+the pipeline that enforces them. The only exceptions are the long-lived
+branches `main` and `develop`.
 
 Pull request titles and commit titles are:
 
