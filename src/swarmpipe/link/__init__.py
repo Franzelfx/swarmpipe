@@ -1,4 +1,4 @@
-"""Layer 3: the transport path. **Not yet implemented (T1).**
+"""Layer 3: the transport path. Not yet implemented (T1).
 
 L3 sees ``list[bytes]``. No tensors, no dtypes, no training steps. One protocol —
 ``send_multipart`` / ``recv_multipart`` / ``close``, plus the byte counters that

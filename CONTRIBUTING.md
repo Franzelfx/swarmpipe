@@ -125,11 +125,26 @@ machine, and the splitting logic needs no cluster at all.
 
 ## Style
 
-Line length 100. `ruff` for linting and import order. NumPy docstrings on every
-public symbol, starting with one line of purpose. Everything in English —
+Line length 100. `ruff` for linting and import order. Everything in English —
 documents, code, docstrings, commit messages. `README.de.md` is the one
 deliberate translation. What gets documented and what does not:
 [doc/README.md](doc/README.md).
+
+**Docstrings are NumPy style, on public symbols only, and `ruff` checks them.**
+The API reference is the code, so the docstrings *are* the reference:
+
+- One line of purpose first, ending with a period. A function or method says
+  what it does in the imperative — "Return the resolved device" — while a
+  property or an attribute describes the value it stands for.
+- Then the NumPy sections that apply: `Parameters`, `Returns`, `Raises`. What
+  the signature already says does not need saying again; what it cannot say —
+  that a boundary compressor is lossy, that a frame tag is fixed forever — does.
+- **Nothing on private symbols.** A name starting with `_` is documented by its
+  name and its one caller, and `ruff`'s `D1xx` rules skip it on purpose.
+  `tests/` is exempt for the same reason: a test name is its documentation.
+
+`ruff check .` enforces this, so a missing docstring fails review the same way
+a missing test does.
 
 New dependencies only with a justification — the base install stays light, see
 `THIRD-PARTY.md`. Extend a module rather than add an abstraction: the parent

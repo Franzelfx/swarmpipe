@@ -58,7 +58,17 @@ src = ["src", "tests"]
 extend-exclude = ["seed"]
 
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "I"]
+select = ["E4", "E7", "E9", "F", "I", "D"]
+
+[tool.ruff.lint.pydocstyle]
+# The API reference is the code (doc/README.md), so the docstrings are the
+# reference and their shape is checked rather than trusted.
+convention = "numpy"
+
+[tool.ruff.lint.per-file-ignores]
+# A test name is its documentation, and a docstring on top of it would only
+# repeat the name in prose.
+"tests/**" = ["D"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

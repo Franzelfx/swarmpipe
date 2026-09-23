@@ -25,6 +25,7 @@ class GpuLayerSpan:
 
     @property
     def num_layers(self) -> int:
+        """How many blocks this span covers."""
         return max(0, self.layer_end - self.layer_start)
 
 

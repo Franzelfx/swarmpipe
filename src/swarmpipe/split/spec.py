@@ -59,7 +59,7 @@ class Placement:
         return self.head_device or self.device
 
     def block_device(self, index: int) -> str:
-        """Resolved device for this stage's ``index``-th block."""
+        """Return the resolved device for this stage's ``index``-th block."""
         if self.block_devices is None:
             return self.device
         return self.block_devices[index]
