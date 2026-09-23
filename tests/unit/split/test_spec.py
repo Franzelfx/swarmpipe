@@ -1,50 +1,13 @@
 """Layer 1's plan object: defaults, resolution and JSON round-trip.
 
 Deliberately torch-free — the leader builds a spec on a box that has no PyTorch,
-so this package must import and pass without it.
+so this package must import and pass without it. That contract itself is checked
+in ``tests/unit/test_torch_free.py``, across every layer rather than this one.
 """
 
 import json
-import subprocess
-import sys
-import textwrap
 
 from swarmpipe.split import Placement, SplitSpec, StageSpec
-
-_PROBE = textwrap.dedent(
-    """
-    import sys
-
-    class _Blocker:
-        def find_module(self, name, path=None):
-            if name == "torch" or name.startswith("torch."):
-                raise ImportError(f"swarmpipe L1 spec must not import torch (tried: {name})")
-            return None
-
-    sys.meta_path.insert(0, _Blocker())
-
-    import swarmpipe.split            # noqa: F401
-    from swarmpipe.split import SplitSpec, StageSpec  # noqa: F401
-
-    StageSpec.from_dict({"stage_index": 1, "split": {"split_layer": 2}})
-    assert "torch" not in sys.modules, "torch was imported after all"
-    print("ok")
-    """
-)
-
-
-def test_the_plan_layer_imports_without_torch() -> None:
-    """L1's spec is the half the torch-free control plane can build.
-
-    Runs in a subprocess because the unit suite imports torch elsewhere, so an
-    in-process check would pass on an already-loaded module - the same reason
-    ``tests/unit/leader/test_leader_is_torch_free.py`` shells out.
-    """
-    result = subprocess.run(
-        [sys.executable, "-c", _PROBE], capture_output=True, text=True, timeout=180
-    )
-    assert result.returncode == 0, f"the split spec pulled in torch:\n{result.stderr}"
-    assert "ok" in result.stdout
 
 
 def test_boundary_defaults_to_halfway_and_ranges_are_contiguous() -> None:
