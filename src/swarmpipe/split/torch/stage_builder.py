@@ -1,21 +1,21 @@
 """Torch backend of Layer 1: the actual model surgery.
 
-Carries out a :class:`~silent_swarm.runtime.split.spec.StageSpec` against a
+Carries out a :class:`~swarmpipe.split.spec.StageSpec` against a
 loaded model and hands back a
-:class:`~silent_swarm.runtime.split.api.StageBundle`: this stage's blocks, its
+:class:`~swarmpipe.split.api.StageBundle`: this stage's blocks, its
 embeddings or head, its half of the boundary compressor, and exactly the
 parameters it should optimize - all placed on the devices the spec asked for.
 
-This used to be the first ninety lines of ``run_torch_stage``, inseparable from
-the training loop that followed it, which meant none of it could be tested
-without a channel and a peer. Splitting it out is task T4 of
-``docs/planning/pipeline-library-extraction-epics.md``; the loop stays in the
-application for now (open decision D3).
+In the parent project this was the first ninety lines of a training function,
+inseparable from the loop that followed it, which meant none of it could be
+tested without a channel and a peer. Here it is a call: a model and a spec in,
+one stage out. The loop stays with the caller — it is an opinion about
+optimizers and schedules, and this is the layer beneath them.
 
 Scope, as before: 2 stages, GPT-2 (learned positions) and Llama/Qwen (rotary).
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations
@@ -23,23 +23,25 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Any
 
-from silent_swarm.runtime.framework_guard import ensure_single_framework
+from swarmpipe.split.torch.framework_guard import ensure_single_framework
 
 ensure_single_framework("torch")
 
-from silent_swarm.runtime.compression.factory import compressor_from_spec  # noqa: E402
-from silent_swarm.runtime.compression.modules import LearnedBottleneck  # noqa: E402
-from silent_swarm.runtime.compression.split import split_bottleneck  # noqa: E402
-from silent_swarm.runtime.finetune.freeze import freeze_backbone as _freeze_model_backbone  # noqa: E402
-from silent_swarm.runtime.finetune.lora import (  # noqa: E402
+from swarmpipe.split.api import StageBundle  # noqa: E402
+from swarmpipe.split.spec import StageSpec  # noqa: E402
+from swarmpipe.split.torch.arch_adapter import build_adapter  # noqa: E402
+from swarmpipe.split.torch.compression.factory import compressor_from_spec  # noqa: E402
+from swarmpipe.split.torch.compression.modules import LearnedBottleneck  # noqa: E402
+from swarmpipe.split.torch.compression.split import split_bottleneck  # noqa: E402
+from swarmpipe.split.torch.finetune.freeze import (  # noqa: E402
+    freeze_backbone as _freeze_model_backbone,
+)
+from swarmpipe.split.torch.finetune.lora import (  # noqa: E402
     apply_lora,
     default_target_modules,
     qualified_target_modules,
 )
-from silent_swarm.runtime.split.api import StageBundle  # noqa: E402
-from silent_swarm.runtime.split.spec import StageSpec  # noqa: E402
-from silent_swarm.runtime.torch.arch_adapter import build_adapter  # noqa: E402
-from silent_swarm.runtime.torch.loader import introspect_decoder  # noqa: E402
+from swarmpipe.split.torch.loader import introspect_decoder  # noqa: E402
 
 __all__ = ["build_stage"]
 
@@ -71,7 +73,7 @@ def _inject_lora(model, lora_cfg: dict[str, Any], topo, own_blocks: list):
     the non-LoRA paths already use - so the two stages train disjoint halves.
     The reported config keeps the architecture-level suffixes (and so the
     fingerprint the two stages must agree on); only the injection is narrowed.
-    Under a shard-only load (E5) the other stage's blocks hold meta tensors, so
+    Under a shard-only load the other stage's blocks hold meta tensors, so
     touching them would fail outright rather than merely waste adapters.
     """
     lora_cfg["target_modules"] = list(
@@ -174,7 +176,7 @@ def build_stage(model, spec: StageSpec) -> StageBundle:
         embed_tokens = topo.embed_tokens
         # Move stage-0 modules to their device(s) - always, whether single-GPU or
         # multi-GPU. A `block_devices` guard here previously skipped this for
-        # single-GPU distributed jobs (where the leader pins to one GPU), leaving
+        # single-GPU distributed jobs (where the caller pins to one GPU), leaving
         # embed_tokens on CPU while inputs were moved to cuda:0 -> device mismatch
         # in F.embedding.
         embed_tokens.to(placement.embed)

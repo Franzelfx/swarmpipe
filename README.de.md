@@ -7,10 +7,10 @@ Eine Bibliothek für Pipeline-Parallelität auf der Hardware, die tatsächlich
 vorhanden ist: zwei oder drei gewöhnliche Rechner, unterschiedliche GPUs, ein
 Consumer-Internetanschluss und keine Cluster-Verwaltung.
 
-> **Status: Pre-Alpha.** Die Planungsschicht von Layer 1 ist implementiert und
-> getestet. Das torch-Backend existiert, wartet aber auf seine Portierung (siehe
-> [seed/](seed/README.md)); Layer 2 und 3 sind spezifiziert, aber noch nicht
-> geschrieben.
+> **Status: Pre-Alpha.** Layer 1 ist implementiert und getestet: die
+> Plan-Objekte und das torch-Backend, das sie ausführt, `build_stage`
+> eingeschlossen. Layer 2 und 3 sind spezifiziert, aber noch nicht geschrieben —
+> es gibt also noch nichts, was einen Tensor zwischen zwei Maschinen bewegt.
 
 [English version](README.md) · [Mitwirken](CONTRIBUTING.md) ·
 [Dokumentationsregeln](doc/README.md)

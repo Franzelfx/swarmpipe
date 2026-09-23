@@ -1,11 +1,12 @@
-"""Build a torch compressor from a JSON compression spec (E5).
+"""Build a torch compressor from a JSON compression spec.
 
-Mirrors the Keras ``compression_factory_from_spec`` so existing experiment
-configs (``none``, ``fixed_intN``, ``learned_dimN[_intM|_fp16]``,
-``learned_bottleneck``) work unchanged on the torch runtime.
+The spec strings (``none``, ``fixed_intN``, ``learned_dimN[_intM|_fp16]``,
+``learned_bottleneck``) are a compatibility surface: they sit in the job records
+and experiment configs of systems already running, so their *meaning* may not
+change even when nothing fails locally.
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations
@@ -25,7 +26,7 @@ def compressor_from_spec(hidden_dim: int, compression_spec: dict | None) -> nn.M
     hidden_dim : int
         Hidden width of the activation crossing the boundary.
     compression_spec : dict or None
-        Compression profile (same schema as the Keras path).
+        Compression profile; see the module docstring for the spec strings.
 
     Raises
     ------

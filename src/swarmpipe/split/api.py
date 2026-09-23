@@ -9,10 +9,10 @@ That makes the surgery unit-testable without a cluster, and leaves the loop
 (which is an opinion about optimizers and schedules) in the application.
 
 This module is framework-free on purpose: the modules a bundle carries are typed
-``Any`` here and made concrete by a backend, the way
-:mod:`swarmpipe.runtime.interfaces` does it. The only backend that exists is
-the torch one,
-:func:`~swarmpipe.split.torch.stage_builder.build_stage`.
+``Any`` here and made concrete by a backend. The only backend that exists is the
+torch one, :func:`~swarmpipe.split.torch.stage_builder.build_stage`, and that is
+a deliberate decision rather than an oversight - the ``Protocol`` seam stays
+because it is what keeps this module, and the layers below it, torch-free.
 
 swarmpipe — Copyright 2026 NexPatch AI UG.
 Licensed under the Apache License 2.0. See LICENSE.

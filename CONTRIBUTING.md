@@ -81,12 +81,11 @@ pushes, no force pushes, only green CI, linear history, and squash merges.
 
 | Path | What lives there |
 |---|---|
-| `src/swarmpipe/split/` | L1. Sees models. `spec.py`/`api.py`/`plan.py` are torch-free; `torch/` is the backend. |
+| `src/swarmpipe/split/` | L1. Sees models. `spec.py`/`api.py`/`plan.py` are torch-free; `torch/` is the backend and the only package that may import torch. |
 | `src/swarmpipe/wire/` | L2. Sees tensor frames. **Torch-free by rule.** Not yet implemented (T2). |
 | `src/swarmpipe/link/` | L3. Sees `list[bytes]`. **Torch-free by rule.** Not yet implemented (T1). |
 | `tests/unit/` | Mirrors `src/swarmpipe/`. |
-| `seed/port/` | Code from the parent project, awaiting the T0 port. Not importable yet — see [seed/README.md](seed/README.md). |
-| `seed/origin/` | The original extraction plan, verbatim. Provenance only; the valid plan is the milestones of the project sketch. |
+| `seed/origin/` | The parent project's extraction plan, verbatim. Provenance only — see [seed/README.md](seed/README.md). |
 | `doc/` | Documentation policy: what gets written down at this stage and what does not. |
 
 ## The rules that are not style
@@ -179,6 +178,6 @@ as to the documentation.
 
 ## What does not belong here
 
-No model weights, no checkpoints, no personal data. Nothing from the parent
-project beyond what already sits in `seed/` — and that stays unchanged until
-the port.
+No model weights, no checkpoints, no personal data. Nothing further from the
+parent project: the port is done, and `seed/origin/` is provenance that stays
+as it is.

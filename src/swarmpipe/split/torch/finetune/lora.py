@@ -1,4 +1,4 @@
-"""PEFT/LoRA fine-tuning (E7, wired into jobs by quantized-lora E3).
+"""PEFT/LoRA fine-tuning: train adapters instead of the pretrained weights.
 
 LoRA is the parameter-efficient path for fine-tuning large split models: the
 pretrained weights are frozen and only small low-rank adapters train, which is
@@ -6,12 +6,11 @@ what makes a model far larger than the cluster's optimizer budget trainable at
 all. Full fine-tuning costs roughly 16 bytes per parameter once AdamW's moments
 and the fp32 master copy are counted; LoRA costs that only for the adapters.
 
-PEFT is an optional dependency, imported lazily, so a fellow without it runs
-full-precision, non-LoRA jobs unchanged and fails a LoRA one with a readable
-message.
+PEFT is an optional dependency, imported lazily, so a worker without it runs
+non-LoRA jobs unchanged and fails a LoRA one with a readable message.
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations
@@ -57,7 +56,7 @@ def default_target_modules(topology: Any) -> list[str]:
     Parameters
     ----------
     topology : DecoderTopology
-        From :func:`~silent_swarm.runtime.torch.loader.introspect_decoder`.
+        From :func:`~swarmpipe.split.torch.loader.introspect_decoder`.
 
     Returns
     -------
@@ -152,7 +151,7 @@ def apply_lora(
 
 
 def lora_parameters(model: Any) -> list[Any]:
-    """The adapter parameters of a LoRA-wrapped model, for the optimizer.
+    """Return the adapter parameters of a LoRA-wrapped model, for the optimizer.
 
     Returns
     -------
@@ -192,7 +191,7 @@ def merge_lora(model: Any) -> Any:
 
 
 def lora_fingerprint(config: dict | None) -> str:
-    """A stable short hash of the adapter configuration.
+    """Return a stable short hash of the adapter configuration.
 
     Two pipeline stages train adapters over their own half of one model, and
     their shards are later merged into a single servable. That only makes sense

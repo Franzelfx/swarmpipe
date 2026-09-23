@@ -4,8 +4,8 @@ Used for compressor calibration: the inserted compression layers (which are
 separate ``nn.Module`` objects, not part of the HF model) stay trainable while
 all pretrained weights are frozen.
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations

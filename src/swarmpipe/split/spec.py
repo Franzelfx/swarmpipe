@@ -1,11 +1,10 @@
 """Serialisable description of how a model is split across pipeline stages (L1).
 
-The Layer-1 contract of the pipeline-library extraction: one object that says
-*how* a model is cut in two and *where* this stage's modules go, instead of the
-nine keyword arguments :func:`~swarmpipe.runtime.torch.distributed_stage.run_torch_stage`
-used to take. Deliberately framework-free - plain dataclasses, JSON in and JSON
-out - so the torch-free control plane can build a spec that a GPU worker
-executes.
+The Layer-1 contract: one object that says *how* a model is cut in two and
+*where* this stage's modules go, instead of the nine keyword arguments the
+surgery used to take inline. Deliberately framework-free - plain dataclasses,
+JSON in and JSON out - so the torch-free control plane can build a spec that a
+GPU worker executes.
 
 Nothing here touches a model: it is a *plan*, and
 :func:`~swarmpipe.split.torch.stage_builder.build_stage` is what carries it
@@ -110,7 +109,7 @@ class SplitSpec:
         :meth:`boundary_layer`.
     compression : dict
         Boundary compression profile (see
-        :func:`~swarmpipe.split.compression.factory.compressor_from_spec`).
+        :func:`~swarmpipe.split.torch.compression.factory.compressor_from_spec`).
         A learned bottleneck is split across the boundary so the narrow code, not
         the reconstruction, crosses the wire.
     lora : dict
@@ -121,9 +120,9 @@ class SplitSpec:
         Train only the boundary compressor. Ignored when ``lora`` is enabled.
     dtype, quantization : optional
         The precision the leader chose for the run. Carried here so one spec
-        describes the whole placement decision; consumed by the *loader*
-        (:func:`~swarmpipe.split.torch.loader.load_stage_shard`), not
-        by the stage builder, which takes the model already loaded.
+        describes the whole placement decision; consumed by whoever loads the
+        weights, not by the stage builder, which takes the model already
+        loaded.
     """
 
     num_stages: int = 2
