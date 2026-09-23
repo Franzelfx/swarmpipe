@@ -1,4 +1,4 @@
-"""Layer 2: tensor frames and the session protocol. **Not yet implemented (T2).**
+"""Layer 2: tensor frames and the session protocol. Not yet implemented (T2).
 
 L2 sees a ``TensorFrame`` — shape, dtype, payload — and the role protocol on top
 of it: an activation forward, a ``(loss, gradient)`` reply back. It is torch-free
