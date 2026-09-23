@@ -95,7 +95,23 @@ def plan_gpu_layers(
     -------
     list of GpuLayerSpan
         One span per GPU that received at least one layer.
+
+    Raises
+    ------
+    ValueError
+        If ``gpu_indices`` is given and does not have one entry per GPU in
+        ``gpu_free_gb``.
     """
+    # One index per GPU, or the two lists cannot be paired. This used to be left
+    # to zip(), which stops at the shorter one: a caller passing two VRAM
+    # figures and one index got a plan that silently covered half the range, and
+    # plan_block_devices turned the uncovered half into empty device strings.
+    if gpu_indices is not None and len(gpu_indices) != len(gpu_free_gb):
+        raise ValueError(
+            f"gpu_indices ({len(gpu_indices)}) and gpu_free_gb "
+            f"({len(gpu_free_gb)}) must describe the same GPUs."
+        )
+
     count = layer_end - layer_start
     indices = gpu_indices if gpu_indices is not None else list(range(len(gpu_free_gb)))
     weights = [1.0] * len(gpu_free_gb) if str(mode).lower() == "equal" else list(gpu_free_gb)
@@ -103,7 +119,7 @@ def plan_gpu_layers(
 
     spans: list[GpuLayerSpan] = []
     cursor = layer_start
-    for gpu_index, size in zip(indices, sizes):
+    for gpu_index, size in zip(indices, sizes, strict=True):
         if size <= 0:
             continue
         spans.append(GpuLayerSpan(gpu_index, cursor, cursor + size))
@@ -123,12 +139,38 @@ def plan_block_devices(
     Distributes ``num_blocks`` over the local GPUs (``equal`` or ``weighted`` by
     free VRAM) and returns ``["cuda:0", "cuda:0", "cuda:1", ...]`` (length
     ``num_blocks``).
+
+    Raises
+    ------
+    ValueError
+        If there are blocks to place but no GPU to place them on, or if
+        ``gpu_indices`` does not match ``gpu_free_gb``.
+    RuntimeError
+        If any block ended up without a device. The list goes on to
+        :class:`~swarmpipe.split.spec.Placement`, and from there a module is
+        moved to whatever string is in it, so an unplaced block must not leave
+        this function.
     """
+    # With no GPUs there is no device string to hand back, and the old code
+    # returned one empty string per block rather than saying so.
+    if num_blocks > 0 and not gpu_free_gb:
+        raise ValueError(f"cannot place {num_blocks} blocks: gpu_free_gb is empty.")
+
     spans = plan_gpu_layers(0, num_blocks, gpu_free_gb, gpu_indices=gpu_indices, mode=mode)
     devices: list[str] = [""] * num_blocks
     for span in spans:
         for i in range(span.layer_start, span.layer_end):
             devices[i] = f"cuda:{span.gpu_index}"
+
+    # The guards above should make this unreachable. It stays because the value
+    # it protects is the one that reaches the surgery: a block moved to a device
+    # named "" fails far from here, with nothing pointing back at the plan.
+    unplaced = [i for i, device in enumerate(devices) if not device]
+    if unplaced:
+        raise RuntimeError(
+            f"blocks {unplaced} were left without a device by a plan over "
+            f"{len(gpu_free_gb)} GPUs; this is a bug in the planner."
+        )
     return devices
 
 
