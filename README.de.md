@@ -9,9 +9,10 @@ Consumer-Internetanschluss und keine Cluster-Verwaltung.
 
 > **Status: Pre-Alpha.** Layer 1 ist implementiert und getestet: die
 > Plan-Objekte und das torch-Backend, das sie ausführt, `build_stage`
-> eingeschlossen. Layer 3 hat seinen Vertrag und eine In-Process-Verbindung,
-> aber noch keinen Transport; Layer 2 ist spezifiziert und nicht geschrieben. Es
-> gibt also weiterhin nichts, was einen Tensor zwischen zwei Maschinen bewegt.
+> eingeschlossen. Layer 2 kann einen Tensor auf die Leitung legen und wieder
+> herunterholen; Layer 3 hat seinen Vertrag und eine In-Process-Verbindung. Was
+> fehlt, ist ein Transport — zwischen zwei *Maschinen* bewegt sich also noch
+> nichts.
 
 [English version](README.md) · [Mitwirken](CONTRIBUTING.md) ·
 [Dokumentationsregeln](doc/README.md)
