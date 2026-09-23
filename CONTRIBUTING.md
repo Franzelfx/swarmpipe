@@ -97,7 +97,10 @@ pushes, no force pushes, only green CI, linear history, and squash merges.
    CI; whoever breaks it fixes it with an adapter in L1, not with an exception.
    Checked through a subprocess with an import blocker, not in-process — the
    test suite imports torch elsewhere, and an in-process check would run
-   against an already loaded module and pass.
+   against an already loaded module and pass. The check lives in
+   `tests/unit/test_torch_free.py`, walks the packages from disk so a new
+   module is covered the day it lands, and holds the plan half of `split/` to
+   the same rule: only `split/torch/` may import torch.
 2. **L1 never touches a socket.** If a splitting function needs a channel, the
    design is wrong.
 3. **Dependencies point in one direction**: `split` → `wire` → `link`. The
