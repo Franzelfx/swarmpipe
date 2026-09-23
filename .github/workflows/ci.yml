@@ -30,12 +30,14 @@ jobs:
           domain_re = r"(split|wire|link|seed|readme|ci|release)"
           branch_re = re.compile(rf"^{type_re}\({domain_re}\)/[0-9]+-[a-z0-9]+(?:-[a-z0-9]+)*$")
           title_re = re.compile(rf"^{type_re}\({domain_re}\): #[0-9]+: .+$")
+          allowed_branch_names = {"main", "develop"}
 
           errors = []
-          if not branch_re.fullmatch(branch):
+          if branch not in allowed_branch_names and not branch_re.fullmatch(branch):
               errors.append(
                   "branch name must match "
-                  "<type>(<domain>)/<number>-<slug> with approved type/domain values"
+                  "<type>(<domain>)/<number>-<slug> with approved type/domain values, "
+                  "except for main and develop"
               )
           if not title_re.fullmatch(title):
               errors.append(
