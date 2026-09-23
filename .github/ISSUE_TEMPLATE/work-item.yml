@@ -1,0 +1,70 @@
+name: Work item
+description: Start work with an issue that already carries the project workflow.
+title: "<type>(<domain>): <description>"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening this issue, create or choose the milestone for the funded
+        two-month block. After opening it, apply exactly one of the labels
+        `feat`, `fix`, `docs`, `chore`, `spike`.
+
+  - type: dropdown
+    id: work-type
+    attributes:
+      label: Type
+      description: The label this work item should carry.
+      options:
+        - feat
+        - fix
+        - docs
+        - chore
+        - spike
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      description: The layer or repository surface this work belongs to.
+      options:
+        - split
+        - wire
+        - link
+        - seed
+        - readme
+        - ci
+        - release
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem or goal
+      description: What should change, and why?
+      placeholder: Describe the problem, the goal and any constraints.
+    validations:
+      required: true
+
+  - type: textarea
+    id: done
+    attributes:
+      label: Done checklist
+      description: List the conditions that must be true before this issue is closed.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+      render: markdown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: size
+    attributes:
+      label: Size check
+      description: Larger work is split before the branch exists.
+      options:
+        - label: This issue is about a week of work or less, or it has already been split.
+          required: true

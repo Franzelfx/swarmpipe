@@ -5,7 +5,54 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
+  contribution-policy:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch and pull request title
+        env:
+          PR_BRANCH: ${{ github.head_ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import sys
+
+          branch = os.environ["PR_BRANCH"]
+          title = os.environ["PR_TITLE"]
+
+          type_re = r"(feat|fix|docs|chore|spike)"
+          domain_re = r"(split|wire|link|seed|readme|repo|ci|release)"
+          branch_re = re.compile(rf"^{type_re}\({domain_re}\)/[0-9]+-[a-z0-9]+(?:-[a-z0-9]+)*$")
+          title_re = re.compile(rf"^{type_re}\({domain_re}\): #[0-9]+: .+$")
+          allowed_branch_names = {"main", "develop"}
+
+          errors = []
+          if branch not in allowed_branch_names and not branch_re.fullmatch(branch):
+              errors.append(
+                  "branch name must match "
+                  "<type>(<domain>)/<number>-<slug> with approved type/domain values, "
+                  "except for main and develop"
+              )
+          if not title_re.fullmatch(title):
+              errors.append(
+                  "pull request title must match "
+                  "<type>(<domain>): #<number>: <description>"
+              )
+          if len(title) > 72:
+              errors.append("pull request title must be 72 characters or fewer")
+
+          if errors:
+              for error in errors:
+                  print(f"::error::{error}")
+              sys.exit(1)
+          PY
+
   # The contract that keeps the layering honest: L2/L3 and the L1 plan layer
   # must install and pass with no deep-learning framework anywhere near them.
   torch-free:

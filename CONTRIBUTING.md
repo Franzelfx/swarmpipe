@@ -39,6 +39,44 @@ pip install -e ".[dev]"
 pytest -m "not torch" -q
 ```
 
+## Workflow
+
+Work starts as an issue, not as a branch. Before the first commit, the issue
+must have:
+
+- a **done** checklist
+- a milestone for the funded period, one milestone per two-month block
+- exactly one workflow label: `feat`, `fix`, `docs`, `chore` or `spike`
+
+If a task looks larger than about a week, split it first and branch only from a
+piece with a clear checklist.
+
+Branch names are:
+
+```text
+<type>(<domain>)/<number>-<slug>
+```
+
+`<type>` is one of `feat`, `fix`, `docs`, `chore`, `spike`. `<domain>` names
+the layer or repository surface: `split`, `wire`, `link`, `seed`, `readme`,
+`repo`, `ci`, `release`. `repo` is for the rules themselves — this file, the
+issue and pull request templates, the licence — as opposed to `ci`, which is
+the pipeline that enforces them. The only exceptions are the long-lived
+branches `main` and `develop`.
+
+Pull request titles and commit titles are:
+
+```text
+<type>(<domain>): #<number>: <description>
+```
+
+Use the imperative mood and keep the whole title at or below 72 characters. The
+pull request title becomes the squash commit title, so write it once and keep
+it final.
+
+Everything lands through a pull request. `main` stays protected: no direct
+pushes, no force pushes, only green CI, linear history, and squash merges.
+
 ## Layout
 
 | Path | What lives there |
