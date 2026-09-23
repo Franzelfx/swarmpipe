@@ -1,18 +1,23 @@
 """Enforce a single deep-learning framework per process.
 
-TensorFlow (the legacy Keras stack) and PyTorch (the migration target) must not
-coexist in one process: they fight over CUDA/cuDNN initialization and GPU memory.
-During the migration both packages may be installed at once, so this guard makes
-the *runtime* selection explicit and fails fast if a process tries to use both.
+TensorFlow and PyTorch must not coexist in one process: they fight over
+CUDA/cuDNN initialization and GPU memory. This guard makes the choice explicit
+and fails fast when a process reaches for both, and the torch backend claims
+``"torch"`` on import.
 
-Usage (called at the top of any torch runtime entrypoint)::
+Usage, at the top of a torch entry point::
 
-    from silent_swarm.runtime.framework_guard import ensure_single_framework
+    from swarmpipe.split.torch.framework_guard import ensure_single_framework
     ensure_single_framework("torch")
     import torch  # safe: TensorFlow is now forbidden in this process
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+Inherited from the parent project, where a Keras stack and a torch stack lived
+side by side during a migration. This library has one backend and no TensorFlow
+anywhere, so whether a library should police its host process's framework choice
+at all is an open question rather than a settled one.
+
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations

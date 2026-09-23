@@ -6,10 +6,10 @@ A library for pipeline-parallel execution on the hardware people actually have:
 two or three ordinary computers, different GPUs, a consumer internet connection,
 and no cluster manager.
 
-> **Status: pre-alpha.** The Layer-1 *plan* layer is implemented and tested. The
-> torch backend exists but is awaiting its port (see [seed/](seed/README.md)),
-> and Layers 2 and 3 are specified but not written. Follow along or open an issue
-> if the problem is one you have.
+> **Status: pre-alpha.** Layer 1 is implemented and tested: the plan objects and
+> the torch backend that carries them out, `build_stage` included. Layers 2 and 3
+> are specified but not written, so there is nothing to move a tensor between two
+> machines yet. Follow along or open an issue if the problem is one you have.
 
 [Deutsche Fassung](README.de.md) · [Contributing](CONTRIBUTING.md) ·
 [Documentation policy](doc/README.md)
@@ -160,9 +160,8 @@ This project builds on existing work rather than replacing it. Short version:
 
 | Path | What it holds |
 |---|---|
-| `src/swarmpipe/` | The library. Working today: `split/spec.py`, `split/api.py`, `split/plan.py`. |
+| `src/swarmpipe/` | The library. Working today: all of `split/` — the plan objects, and `split/torch/` for the surgery. |
 | `tests/unit/` | Mirrors `src/swarmpipe/`. Runs without a GPU; `pytest -m "not torch"` runs without torch installed at all. |
-| `seed/port/` | Code lifted from SilentSwarm, awaiting the T0 port. See [seed/](seed/README.md). |
 | `seed/origin/` | The extraction plan this repo came from, kept verbatim for provenance. |
 | `doc/` | The documentation policy — what gets written down at this stage and what does not. |
 

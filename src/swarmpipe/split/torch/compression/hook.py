@@ -1,11 +1,11 @@
-"""Insert a compressor at a layer boundary via a forward hook (E5).
+"""Insert a compressor at a layer boundary via a forward hook.
 
 Replacing a decoder block's output hidden state with the compressed/reconstructed
-one needs no model rewrite — it attaches to any block (the E0 spike pattern,
-generalized to tuple and tensor block outputs).
+one needs no model rewrite — it attaches to any block, and handles both tuple
+and tensor block outputs.
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations

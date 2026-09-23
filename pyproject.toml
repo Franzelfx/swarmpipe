@@ -53,9 +53,6 @@ packages = ["src/swarmpipe"]
 [tool.ruff]
 line-length = 100
 src = ["src", "tests"]
-# `seed/` holds verbatim copies from the parent project, kept byte-identical for
-# provenance until T0 ports them. They are linted once they land in `src/`.
-extend-exclude = ["seed"]
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I", "D"]

@@ -12,14 +12,14 @@ architecture-specific glue the full ``model.forward`` would normally apply:
 * optional **KV-cache** threading for incremental decoding.
 
 This adapter encapsulates those differences behind one interface so the pipeline
-code is architecture-agnostic. It is verified (see
-``tests/unit/runtime/torch/test_arch_adapter.py``) to reproduce the full
-HuggingFace forward bit-for-bit for both the GPT-2 family (learned positions) and
-the Llama/Qwen family (rotary), which is exactly what makes a hand-segmented
-forward correct.
+code is architecture-agnostic. In the parent project it was verified to reproduce
+the full HuggingFace forward bit-for-bit for both the GPT-2 family (learned
+positions) and the Llama/Qwen family (rotary) — which is exactly what makes a
+hand-segmented forward correct, and the test that shows it has not been ported
+yet.
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ from typing import Any
 import torch
 import torch.nn as nn
 
-from silent_swarm.runtime.torch.loader import DecoderTopology, introspect_decoder
+from swarmpipe.split.torch.loader import DecoderTopology, introspect_decoder
 
 
 class UnsupportedArchitectureError(RuntimeError):
@@ -140,7 +140,7 @@ class DecoderAdapter:
 
     @staticmethod
     def new_cache():
-        """A fresh KV cache for incremental decoding (transformers DynamicCache)."""
+        """Return a fresh KV cache for incremental decoding (a DynamicCache)."""
         from transformers import DynamicCache
 
         return DynamicCache()

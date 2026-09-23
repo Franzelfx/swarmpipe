@@ -1,16 +1,15 @@
-"""Split a learned bottleneck across the pipeline boundary (E8).
+"""Split a learned bottleneck across the pipeline boundary.
 
 For true bandwidth savings the *code* must cross the wire, not the
 reconstruction. Splitting a :class:`LearnedBottleneck` puts the down-projection
 on the upstream (sender) stage and the up-projection on the downstream
-(receiver) stage, sharing the original module's parameters. Composed with the E6
-:class:`~silent_swarm.runtime.pipeline.boundary.PipelineBoundary` — whose
-"activation" becomes the narrow code — gradients train the down-projection on the
-sender and the up-projection on the receiver, and the wire carries only the
-narrow code.
+(receiver) stage, sharing the original module's parameters. Composed with the boundary that
+owns the exchange — whose "activation" becomes the narrow code — gradients train
+the down-projection on the sender and the up-projection on the receiver, and the
+wire carries only the narrow code.
 
-SilentSwarm — Copyright 2026 NexPatch AI UG.
-Licensed under the PolyForm Noncommercial License 1.0.0. See LICENSE for details.
+swarmpipe — Copyright 2026 NexPatch AI UG.
+Licensed under the Apache License 2.0. See LICENSE.
 """
 
 from __future__ import annotations
@@ -30,6 +29,7 @@ class BottleneckSender(nn.Module):
         self.down_norm = bottleneck.down_norm
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Project an activation down to the code that crosses the wire."""
         return self.down_norm(self.down(x))
 
 
@@ -42,6 +42,7 @@ class BottleneckReceiver(nn.Module):
         self.up_norm = bottleneck.up_norm
 
     def forward(self, z: torch.Tensor) -> torch.Tensor:
+        """Reconstruct the activation from a code received off the wire."""
         return self.up_norm(self.up(z))
 
 
