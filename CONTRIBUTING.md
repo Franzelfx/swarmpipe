@@ -82,8 +82,8 @@ pushes, no force pushes, only green CI, linear history, and squash merges.
 | Path | What lives there |
 |---|---|
 | `src/swarmpipe/split/` | L1. Sees models. `spec.py`/`api.py`/`plan.py` are torch-free; `torch/` is the backend and the only package that may import torch. |
-| `src/swarmpipe/wire/` | L2. Sees tensor frames. **Torch-free by rule.** Not yet implemented (T2). |
-| `src/swarmpipe/link/` | L3. Sees `list[bytes]`. **Torch-free by rule.** Not yet implemented (T1). |
+| `src/swarmpipe/wire/` | L2. Sees tensor frames. **Torch-free by rule.** Not yet implemented. |
+| `src/swarmpipe/link/` | L3. Sees `list[bytes]`. **Torch-free by rule**, and numpy-free besides. `base.py` is the contract; an in-process link exists, the transports do not yet. |
 | `tests/unit/` | Mirrors `src/swarmpipe/`. |
 | `seed/origin/` | The parent project's extraction plan, verbatim. Provenance only — see [seed/README.md](seed/README.md). |
 | `doc/` | Documentation policy: what gets written down at this stage and what does not. |
@@ -120,6 +120,12 @@ pushes, no force pushes, only green CI, linear history, and squash merges.
 
 Mirror the source tree: `tests/unit/<package>/` for `src/swarmpipe/<package>/`.
 Mark everything that needs the torch extra with `@pytest.mark.torch`.
+
+A second implementation of an existing contract does not get its own tests. It
+subclasses the shared suite — `tests/unit/link/contract.py` for a transport —
+and passes it **unchanged**. Needing to relax a contract test is the signal that
+either the implementation or the contract is wrong, and which one is a
+discussion worth having in the open rather than in a private copy of the suite.
 
 Prefer tests that need no GPU. That goes further than it looks: device
 placement can be checked against the `meta` device, which exists on every
