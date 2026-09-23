@@ -7,9 +7,11 @@ two or three ordinary computers, different GPUs, a consumer internet connection,
 and no cluster manager.
 
 > **Status: pre-alpha.** Layer 1 is implemented and tested: the plan objects and
-> the torch backend that carries them out, `build_stage` included. Layers 2 and 3
-> are specified but not written, so there is nothing to move a tensor between two
-> machines yet. Follow along or open an issue if the problem is one you have.
+> the torch backend that carries them out, `build_stage` included. Layer 3 has
+> its contract and an in-process link, but no transport yet; Layer 2 is
+> specified and not written. So there is still nothing that moves a tensor
+> between two machines. Follow along or open an issue if the problem is one you
+> have.
 
 [Deutsche Fassung](README.de.md) · [Contributing](CONTRIBUTING.md) ·
 [Documentation policy](doc/README.md)
