@@ -82,7 +82,7 @@ pushes, no force pushes, only green CI, linear history, and squash merges.
 | Path | What lives there |
 |---|---|
 | `src/swarmpipe/split/` | L1. Sees models. `spec.py`/`api.py`/`plan.py` are torch-free; `torch/` is the backend and the only package that may import torch. |
-| `src/swarmpipe/wire/` | L2. Sees tensor frames. **Torch-free by rule.** Not yet implemented. |
+| `src/swarmpipe/wire/` | L2. Sees tensor frames. **Torch-free by rule.** `frames.py` is the frame and the dtype table; the codecs and the session are not written yet. |
 | `src/swarmpipe/link/` | L3. Sees `list[bytes]`. **Torch-free by rule**, and numpy-free besides. `base.py` is the contract; an in-process link exists, the transports do not yet. |
 | `tests/unit/` | Mirrors `src/swarmpipe/`. |
 | `seed/origin/` | The parent project's extraction plan, verbatim. Provenance only — see [seed/README.md](seed/README.md). |

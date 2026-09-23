@@ -1,23 +1,36 @@
-"""Layer 2: tensor frames and the session protocol. Not yet implemented (T2).
+"""Layer 2: tensor frames. Sees shape, dtype and bytes — never a framework.
 
-L2 sees a ``TensorFrame`` — shape, dtype, payload — and the role protocol on top
-of it: an activation forward, a ``(loss, gradient)`` reply back. It is torch-free
-by rule, numpy only; the torch↔numpy conversion is a thin adapter in L1's torch
-backend.
+:class:`~swarmpipe.wire.frames.TensorFrame` is one tensor on its way across a
+link: a dtype tag, a shape, a payload and the step id that lets a reply be
+matched to what it answers. ``encode`` gives the two parts a
+:class:`~swarmpipe.link.base.Link` carries; ``decode`` takes them back.
 
-What lands here, in order:
+The payload is **bytes**, not an array, which is what lets bf16 travel at all —
+numpy has no bfloat16, and widening it would double the traffic on the one link
+that is the bottleneck. The torch side of that conversion lives in
+:mod:`swarmpipe.split.torch.frames`, the only module allowed to know both.
 
-* ``frames.py`` — ``TensorFrame`` + encode/decode. **bf16 has no numpy dtype**
-  and needs an explicit representation; that is the one real trap in T2.
-* ``codec.py`` — the stateless wire codecs (int8/int4 packing, fp16 cast). These
-  are *not* model modules: they have no parameters and no gradient (T3).
-* ``session.py`` — the role object (upstream / downstream) that owns the
-  exchange, including the **step id** that pairs an activation with its gradient.
-
-See the README for the layer contracts.
+Torch-free by rule. Still to come: the stateless wire codecs (int8/int4 packing,
+an fp16 cast), and the session that owns the forward/backward exchange.
 
 swarmpipe — Copyright 2026 NexPatch AI UG.
 Licensed under the Apache License 2.0. See LICENSE.
 """
 
-__all__: list[str] = []
+from swarmpipe.wire.frames import (
+    DTYPES,
+    WIRE_VERSION,
+    FrameError,
+    MalformedFrame,
+    TensorFrame,
+    UnsupportedDtype,
+)
+
+__all__ = [
+    "DTYPES",
+    "WIRE_VERSION",
+    "FrameError",
+    "MalformedFrame",
+    "TensorFrame",
+    "UnsupportedDtype",
+]
