@@ -79,11 +79,6 @@ is universal on consumer connections, **per-machine precision** because the
 hardware is mixed, and **no scheduler at all**, because the user is the
 scheduler.
 
-swarmpipe is that machinery on its own, extracted from a working system
-([SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm)) rather than designed
-in the abstract, with the seams drawn where experience says they belong. The
-funded work is finishing the extraction properly.
-
 ## What L1 looks like today
 
 The plan is a serialisable object, so the process that *decides* the split need
@@ -156,7 +151,6 @@ This project builds on existing work rather than replacing it. Short version:
 | [`torch.distributed.pipelining`](https://docs.pytorch.org/docs/stable/distributed.pipelining.html) (ex-PiPPy) | Native pipeline parallelism in PyTorch | Assumes a `torch.distributed` process group — mutually reachable ranks, no relay, no boundary compression |
 | [Petals](https://github.com/bigscience-workshop/petals) / [hivemind](https://github.com/learning-at-home/hivemind) | Closest relative: model layers over a public swarm, NAT traversal | A network with a client and a protocol; swarmpipe is the splitting and transport machinery with no swarm attached |
 | [exo](https://github.com/exo-explore/exo), [distributed-llama](https://github.com/b4rtaz/distributed-llama), llama.cpp RPC | Split **inference** across everyday devices | No gradients, no fine-tuning — the backward path is the hard half |
-| [SilentSwarm](https://github.com/Franzelfx/nxpSilentSwarm) | The parent project this was extracted from | A platform with a scheduler and a control plane; noncommercially licensed. This is its severable core |
 
 ## Repository layout
 
@@ -176,9 +170,7 @@ is in [doc/README.md](doc/README.md).
 ## Licence
 
 Apache-2.0. See [LICENSE](LICENSE) and [THIRD-PARTY.md](THIRD-PARTY.md) for
-dependency licensing. Note that the parent project, SilentSwarm, remains
-dual-licensed under PolyForm Noncommercial and is *not* covered by this licence;
-only the extracted library is.
+dependency licensing.
 
 ## Contact
 
